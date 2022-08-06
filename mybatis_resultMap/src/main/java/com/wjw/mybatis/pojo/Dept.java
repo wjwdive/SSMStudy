@@ -1,5 +1,7 @@
 package com.wjw.mybatis.pojo;
 
+import java.util.List;
+
 /**
  * @Author wjwdive
  * @Date 2022/8/3 1:26
@@ -8,6 +10,8 @@ package com.wjw.mybatis.pojo;
 public class Dept {
     private Integer deptId;
     private String deptName;
+
+    private List<Emp> emps;
 
     public Dept() {
     }
@@ -30,6 +34,7 @@ public class Dept {
         return "Dept{" +
                 "deptId=" + deptId +
                 ", deptName='" + deptName + '\'' +
+                ", emps=" + emps +
                 '}';
     }
 }

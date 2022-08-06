@@ -10,10 +10,92 @@
 
     2.当字段符合MySQL的要求使用_, 而属性符合java的要求使用驼峰，
     此时可以在MyBatis的核心配置文件中设置一个全局配置，可以自动将下划线映射为驼峰
+
+    3.使用resultMap 自定义映射
+    id 设置主键的表字段和pojo对象的属性
 -->
+<!--
+    resultMap 自定义映射
+    id: 唯一标识
+    type: 处理映射关系的实体类的类型
+    id:处理主键和实体中属性的映射关系
+    result: 处理普通字段和实体类中属性的映射关系
+    property: 设置映射关系中的属性的属性名，必须是处理的实体类型中的属性名
+    association：处理多对一的映射关系，处理实体类类型的属性
+
+    第一种方式定义
+-->
+<!--    1两表联查，多对一，第一种方式 自定义映射，直接定义-->
+    <resultMap id="empAndDeptResultMapOne" type="Emp">
+        <id column="emp_id" property="empId"></id>
+        <result column="emp_name" property="empName"></result>
+        <result column="age" property="age"></result>
+        <result column="gender" property="gender"></result>
+        <result column="dept_id" property="dept.deptId"></result>
+        <result column="dept_name" property="dept.deptName"></result>
+    </resultMap>
+
+<!--    2两表联查，多对一，第二种方式 自定义映射 使用association
+    accociation: 处理多对一的映射关系，处理实体类类型的属性
+    properity: 设置需要处理映射关系的属性名
+    javaType: 设置需要处理的属性的类型
+-->
+    <resultMap id="empAndDeptResultMap" type="Emp">
+        <id column="emp_id" property="empId"></id>
+        <result column="emp_name" property="empName"></result>
+        <result column="age" property="age"></result>
+        <result column="gender" property="gender"></result>
+        <association property="dept" javaType="Dept">
+            <id column="dept_id" property="deptId"></id>
+            <result column="dept_name" property="deptName"></result>
+        </association>
+    </resultMap>
 <!--    Emp getEmpById(@Param("empId") String empId);-->
     <select id="getEmpById" resultType="Emp">
         <!-- select emp_id,emp_name, empName, age, gender from t_emp where emp_id = #{empId}; -->
         select * from t_emp where emp_id = #{empId};
+    </select>
+
+<!--    Emp getEmpAndDeptByEmpId(@Param("empId") Integer empId);-->
+<!--    两表联查-->
+    <select id="getEmpAndDeptByEmpId" resultMap="empAndDeptResultMap" >
+        select
+            t_emp.*, t_dept.*
+        from t_emp
+        left join t_dept
+        on t_emp.dept_id = t_dept.dept_id
+        where t_emp.emp_id = #{empId};
+    </select>
+
+    <!--    3两表联查，多对一，第二种方式 自定义映射 使用association
+        分步查询的优点：可以实现延迟加载。但是必须在全局配置里设置好，
+        lazyLoadingEnabled: 延迟加载的全局开关，当开启时，所有有关对象都会延迟加载 默认false,
+        aggressiveLazyLoading: 当开启时，任何方法的调用都会加载该对象的所有属性。否则每个属性会按需加载  默认 true
+     -->
+    <resultMap id="empAndDeptByStepResultMap" type="Emp">
+        <id column="emp_id" property="empId"></id>
+        <result column="emp_name" property="empName"></result>
+        <result column="age" property="age"></result>
+        <result column="gender" property="gender"></result>
+        <!--
+            property: 设置需要处理映射关系的属性的属性名
+            select: 设置分步查询的sql的唯一标识 ctrl + Shift + alt + C 复制mapper接口的唯一标识，sql的唯一标识
+            column: 将查询出的某个字段作为分步查询的sql的条件
+            fetchType: 在开启了延迟加载的环境中，通过该属性设置当前的分步查询是否使用延迟加载 eager:立即加载，lazy:延迟加载
+        -->
+        <association property="dept" fetchType="eager"
+                     select="com.wjw.mybatis.mapper.DeptMapper.getEmpAndDeptByStepTwo"
+                     column="dept_id"
+        ></association>
+    </resultMap>
+<!--    Emp getEmpAndDeptByStepOne(@Param("empId") Integer empId);-->
+    <select id="getEmpAndDeptByStepOne" resultMap="empAndDeptByStepResultMap">
+        select * from t_emp where emp_id = #{empId};
+    </select>
+
+
+<!--    List<Emp> getDeptAndEmpByStemTwo(@Param("deptId") Integer deptId);-->
+    <select id="getDeptAndEmpByStemTwo" resultType="Emp">
+        select * from t_emp where t_emp.dept_id = #{deptId}
     </select>
 </mapper>

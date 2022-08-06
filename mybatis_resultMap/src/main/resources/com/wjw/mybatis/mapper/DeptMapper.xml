@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wjw.mybatis.mapper.DeptMapper">
+
+    <!--    Dept getEmpAndDeptByStepTwo(@Param("deptId") Integer deptId);-->
+    <select id="getEmpAndDeptByStepTwo" resultType="Dept">
+        select *
+        from t_dept
+        where dept_id = #{deptId}
+    </select>
+
+    <!--    处理一对多的映射关系
+    1.collection  ,ResultMap中处理集合类型的映射关系 的标签
+    2.分步查询，
+-->
+    <!--    Dept getDeptAndEmpByDeptId(@Param("deptId") Integer deptId);-->
+    <resultMap id="DeptAndEmpByDeptIdResultMap" type="Dept">
+        <id column="dept_id" property="deptId"></id>
+        <result column="dept_name" property="deptName"></result>
+<!--        注意，这里是ofType -->
+        <collection property="emps" ofType="Emp">
+            <id column="emp_id" property="empId"></id>
+            <result column="emp_name" property="empName"></result>
+            <result column="age" property="age"></result>
+            <result column="gender" property="gender"></result>
+        </collection>
+    </resultMap>
+    <select id="getDeptAndEmpByDeptId" resultMap="DeptAndEmpByDeptIdResultMap">
+        select t_dept.*, t_emp.*
+        from t_dept
+                 left join t_emp
+                           on t_dept.dept_id = t_emp.dept_id
+        where t_dept.dept_id = #{deptId}
+    </select>
+
+<!--    Dept getDeptAndEmpByStepOne(@Param("deptId") Integer deptId);-->
+    <resultMap id="DeptAndEmpByDeptIdResultMapByStep" type="Dept">
+        <id column="dept_id" property="deptId"></id>
+        <result column="dept_name" property="deptName"></result>
+        <collection property="emps"
+                    select="com.wjw.mybatis.mapper.EmpMapper.getDeptAndEmpByStemTwo"
+                    column="dept_id">
+        </collection>
+    </resultMap>
+
+    <select id="getDeptAndEmpByStepOne" resultMap="DeptAndEmpByDeptIdResultMapByStep">
+        select * from t_dept where dept_id = #{deptId}
+    </select>
+
+    <!--
+    FROM
+    <表名> # 笛卡尔积
+    ON
+    <筛选条件> # 对笛卡尔积的虚表进行筛选
+    JOIN <join, left join, right join...>
+    <join表> # 指定join，用于添加数据到on之后的虚表中，例如left join会将左表的剩余数据添加到虚表中
+    WHERE
+    <where条件> # 对上述虚表进行筛选
+    GROUP BY
+    <分组条件> # 分组
+    <SUM()等聚合函数> # 用于having子句进行判断，在书写上这类聚合函数是写在having判断里面的
+    HAVING
+    <分组筛选> # 对分组后的结果进行聚合筛选
+    SELECT
+    <返回数据列表> # 返回的单列必须在group by子句中，聚合函数除外
+    DISTINCT
+    # 数据除重
+    ORDER BY
+    <排序条件> # 排序
+    LIMIT
+    <行数限制>
+
+    -->
+
+<!--
+    1、前端没有提交某些请求参数字段，而服务器却要获取这些请求参数，这时提交到服务器的就是null。
+    2、前端提交表单了，但是文本框里什么都没有输入，这时提交到服务器的就是空字符串。
+
+
+-->
+</mapper>
