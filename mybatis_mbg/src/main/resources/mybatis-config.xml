@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--  Mybatis 中的标签配置顺序
+        he content of element type "configuration" must match
+        "(properties?,settings?,typeAliases?,typeHandlers?,objectFactory?,objectWrapperFactory?,
+        reflectorFactory?,plugins?,environments?,databaseIdProvider?,mappers?)".
+    -->
+    <properties resource="jdbc.properties"/>
+    <settings>
+    <!--        自动将下划线 映射为驼峰
+        &lt;!&ndash; 将下划线映射为驼峰 &ndash;&gt;
+     -->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <!-- 开启延迟加载、最好和按需加载 一起配置 -->
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <!-- 开启按需加载 false 这里是全局配置，如果开启，对所有的分步查询都有效，
+        如果需要针对某些开启，某些关闭按需加载，需要指定某一个association 为延迟加载或立即加载 使用 fetchType="eager" -->
+        <setting name="aggressiveLazyLoading" value="false"/>
+<!--        mybatis 二级缓存，默认开启-->
+<!--        <setting name="cacheEnabled" value="true"/>-->
+    </settings>
+    <typeAliases>
+        <package name="com.wjw.mybatis.pojo"/>
+    </typeAliases>
+    
+    
+
+    <plugins>
+<!--        配置分页插件 4.0.0之后不在用 PageHelper-->
+<!--        <plugin interceptor="com.github.pagehelper.PageHelper"></plugin>-->
+        <plugin interceptor="com.github.pagehelper.PageInterceptor">
+            <!--设置方言-->
+            <property name="helperDialect" value="mysql"/>
+        </plugin>
+    </plugins>
+    <!--    配置连接数据库的函数-->
+    <environments default="test">
+        <environment id="test">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <!--    引入mybatis的映射文件-->
+    <mappers>
+        <package name="com.wjw.mybatis.mapper"/>
+    </mappers>
+</configuration>
