@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+    <bean id="Student" class="com.wjw.spring.pojo.Student">
+    </bean>
+
+<!--    setter 赋值-->
+    <bean id="StudentTwo" class="com.wjw.spring.pojo.Student">
+<!--        property: 通过成员变量的set方法进行赋值
+            name: 设置需要赋值的属性名 和set方法有关
+            value: 位属性所赋的值
+ -->
+        <property name="sid" value="1001"></property>
+        <property name="sname" value="何同学"></property>
+        <property name="age" value="29"></property>
+        <property name="gender" value="男"></property>
+    </bean>
+<!--
+    构造赋值
+-->
+    <bean id="StudentThree" class="com.wjw.spring.pojo.Student">
+        <constructor-arg value="1002" name="sid"></constructor-arg>
+        <constructor-arg value="老李" name="sname"></constructor-arg>
+        <constructor-arg value="39" name="age"></constructor-arg>
+        <constructor-arg value="男" name="gender"></constructor-arg>
+    </bean>
+
+    <bean id="StudentFour" class="com.wjw.spring.pojo.Student">
+        <property value="1003" name="sid"></property>
+<!--        xml中小于号的实体：&lt; 大鱼号 &gt; -->
+        <property value="&lt;老李&gt;" name="sname"></property>
+        <property value="39" name="age"></property>
+<!--        不能使用 value = "null" 设置null值，要使用null标签 <null/> -->
+<!--        <constructor-arg value="null" name="gender"></constructor-arg>-->
+        <property name="gender">
+            <null />
+        </property>
+    </bean>
+
+<!--    引用方式： -->
+    <bean id="StudentFive" class="com.wjw.spring.pojo.Student">
+        <property name="sid" value="1005"></property>
+        <property name="sname" value="小五"></property>
+        <property name="age" value="28"></property>
+        <property name="gender" value="男"></property>
+<!--        ref属性： 引用ioc容器中的某个bean的id -->
+        <property ref="ClazzOne" name="clazz"></property>
+
+    </bean>
+
+    <bean id="ClazzOne" class="com.wjw.spring.pojo.Clazz">
+        <property name="cid" value="101"></property>
+        <property name="cname" value="A"></property>
+    </bean>
+
+    <!--    级联方式定义bean中的引用对象, 需要提前给引用类型赋值或实例化 -->
+    <bean id="StudentSix" class="com.wjw.spring.pojo.Student">
+        <property name="sid" value="1006"></property>
+        <property name="sname" value="小六"></property>
+        <property name="age" value="28"></property>
+        <property name="gender" value="男"></property>
+        <!--        ref属性： 引用ioc容器中的某个bean的id -->
+        <property name="clazz" ref="ClazzOne"></property>
+        <property name="clazz.cid" value="102"></property>
+        <property name="clazz.cname" value="B"></property>
+    </bean>
+
+    <!--    级联方式定义bean中的引用对象, 需要提前给引用类型赋值或实例化 -->
+    <bean id="StudentSeven" class="com.wjw.spring.pojo.Student">
+        <property name="sid" value="1007"></property>
+        <property name="sname" value="小七"></property>
+        <property name="age" value="27"></property>
+        <property name="gender" value="女"></property>
+        <!--        ref属性： 引用ioc容器中的某个bean的id -->
+        <property name="clazz">
+<!--            内部bean, 只能在当前bean的内部使用，不能直接通过IOC容器获取 -->
+            <bean name="clazzInner" class="com.wjw.spring.pojo.Clazz">
+                <property name="cid" value="103"></property>
+                <property name="cname" value="C"></property>
+            </bean>
+        </property>
+    </bean>
+
+
+    <!--    引用方式：定义bean中的引用对象 -->
+    <bean id="StudentEight" class="com.wjw.spring.pojo.Student">
+        <property name="sid" value="1008"></property>
+        <property name="sname" value="小八"></property>
+        <property name="age" value="28"></property>
+        <property name="gender" value="男"></property>
+        <!--        ref属性： 引用ioc容器中的某个bean的id -->
+        <property ref="ClazzOne" name="clazz"></property>
+        <property name="hobby">
+<!--            值类型的数组，用value, 类类型的数组，用<ref bean="xxx"> 引用某个bean -->
+            <array>
+                <value>抽烟</value>
+                <value>喝酒</value>
+                <value>打游戏</value>
+            </array>
+        </property>
+    </bean>
+
+    <bean id="ClazzTwo" class="com.wjw.spring.pojo.Clazz">
+        <property name="cid" value="103"></property>
+        <property name="cname" value="三年二班"></property>
+<!--        直接使用list标签，-->
+<!--        <property name="students">-->
+<!--            <list>-->
+<!--                <ref bean="StudentTwo"></ref>-->
+<!--                <ref bean="StudentSeven"></ref>-->
+<!--                <ref bean="StudentEight"></ref>-->
+<!--            </list>-->
+<!--        </property>-->
+<!--        使用外部定义的 util:list，内部直接使用ref="studentList" -->
+        <property name="students" ref="studentList"></property>
+    </bean>
+<!--    是否可以定义一个bean，是一个arrayList 类型的，定义好后让其他bean引用？
+    不可以，这样做，只会给这个bean赋值，而我们是要网这个集合里添加数据的。
+    需要用到新的约束，util,在本xml头部配置
+-->
+<!--    <bean class="java.util.ArrayList"></bean>-->
+
+<!--    配置一个集合类型的bean,需要使用util的约束-->
+    <util:list id="studentList">
+        <ref bean="StudentSeven"></ref>
+        <ref bean="StudentEight"></ref>
+    </util:list>
+
+
+    <!--    map引用方式1： -->
+    <bean id="StudentNine" class="com.wjw.spring.pojo.Student">
+        <property name="sid" value="1005"></property>
+        <property name="sname" value="小五"></property>
+        <property name="age" value="28"></property>
+        <property name="gender" value="男"></property>
+        <!--        ref属性： 引用ioc容器中的某个bean的id -->
+        <property ref="ClazzOne" name="clazz"></property>
+        <property name="hobby">
+            <!--            值类型的数组，用value, 类类型的数组，用<ref bean="xxx"> 引用某个bean -->
+            <array>
+                <value>抽烟</value>
+                <value>喝酒</value>
+                <value>打游戏</value>
+            </array>
+        </property>
+<!--        map类型的属性 引用方式一，-->
+        <property name="teacherMap">
+            <map>
+<!--                如果值是值类型，就用value,如果是类类型，就用value-ref-->
+                <entry key="10086" value-ref="TeacherOne"></entry>
+                <entry key="10010" value-ref="TeacherTwo"></entry>
+
+            </map>
+        </property>
+    </bean>
+
+    <bean id="TeacherOne" class="com.wjw.spring.pojo.Teacher">
+        <property name="tid" value="1001"></property>
+        <property name="tname" value="刘老师"></property>
+    </bean>
+    <bean id="TeacherTwo" class="com.wjw.spring.pojo.Teacher">
+        <property name="tid" value="1002"></property>
+        <property name="tname" value="李老师"></property>
+    </bean>
+
+    <!--    map引用方式2： -->
+    <bean id="StudentTen" class="com.wjw.spring.pojo.Student">
+        <property name="sid" value="1005"></property>
+        <property name="sname" value="小五"></property>
+        <property name="age" value="28"></property>
+        <property name="gender" value="男"></property>
+        <!--        ref属性： 引用ioc容器中的某个bean的id -->
+        <property ref="ClazzOne" name="clazz"></property>
+        <property name="hobby">
+            <!--            值类型的数组，用value, 类类型的数组，用<ref bean="xxx"> 引用某个bean -->
+            <array>
+                <value>抽烟</value>
+                <value>喝酒</value>
+                <value>打游戏</value>
+            </array>
+        </property>
+        <!--        map类型的属性 引用方式一，-->
+        <property name="teacherMap" ref="teacherMap">
+        </property>
+    </bean>
+<!--    map集合 -->
+    <util:map id="teacherMap">
+        <entry key="10086" value-ref="TeacherOne"></entry>
+        <entry key="10010" value-ref="TeacherTwo"></entry>
+    </util:map>
+
+<!--    p命名空间约束。bean标签里面-->
+    <bean id="StudentEleven" class="com.wjw.spring.pojo.Student"
+          p:sid="1005" p:sname="小龙" p:teacherMap-ref="teacherMap">
+    </bean>
+</beans>
+

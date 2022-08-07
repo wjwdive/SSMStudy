@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+<!--使用 spring 配置数据库连接-->
+<!--    引入jdbc.properties ,通过一个bean引入properties，已过世-->
+<!--    <bean class="Property"-->
+<!--    引入jdbc.properties, 之后可以通过${key} 的方式访问value -->
+<!--    <context:property-path path="./jdbc.properties"></context:property-path>-->
+    <context:property-placeholder location="jdbc.properties"></context:property-placeholder>
+<!--    <context:properties location="classpath:jdbc.properties"></context:properties>-->
+<!--    <context:property-placeholder location="jdbc.properties"/>-->
+    <!--    IOC容器是如何创建bean对象的？通过bean标签中class属性所对应的类型，来获取这个class所对应的对象，在通过new instance方法来调用无参构造来创建对象 -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${jdbc.driver}"></property>
+        <property name="url" value="${jdbc.url}"></property>
+        <property name="username" value="${jdbc.username}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+<!--        数据库连接池初始连接个数 最大是8-->
+<!--        <property name="initialSize" value="8"></property>-->
+<!--&lt;!&ndash;        最大连接数默认是8&ndash;&gt;-->
+<!--        <property name="maxWait" value="16"></property>-->
+    </bean>
+
+</beans>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+<!--
+    我们把UserFactoryBean配置到IOC中，当我们要获取User对象时，无需先获取UserFactoryBean,再获取User对象。
+    可以直接获取User（工厂factoryBean所提供的）对象;
+    虽然这里配置的是UserFactoryBean，实际获取的是User 类型的bean
+-->
+    <bean id="UserFactoryBean" class="com.wjw.spring.factory.UserFactoryBean"></bean>
+</beans>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="user" class="com.wjw.spring.pojo.User" scope="singleton" init-method="initMethod" destroy-method="destroyMethod">
+        <property name="id" value="1001"></property>
+        <property name="username" value="Jarvis"></property>
+        <property name="password" value="0000"></property>
+        <property name="age" value="18"></property>
+    </bean>
+<!--bean生命周期的 后置处理器，必须在配置文件里配置响应的bean ;对ioc容器的每一个bean都有效-->
+    <bean id="myBeanPostProcessor" class="com.wjw.spring.process.MyBeanPostProcessor"></bean>
+</beans>
