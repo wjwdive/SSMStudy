@@ -1,4 +1,4 @@
-package com.wjw.spring.proxy;
+package com.wjw.spring.aop.annotation;
 
 /**
  * @Author wjwdive

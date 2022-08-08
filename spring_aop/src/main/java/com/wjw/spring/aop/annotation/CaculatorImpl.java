@@ -1,6 +1,6 @@
-package com.wjw.spring.proxy.impl;
+package com.wjw.spring.aop.annotation;
 
-import com.wjw.spring.proxy.Caculator;
+import org.springframework.stereotype.Component;
 
 /**
  * @Author wjwdive
@@ -17,13 +17,14 @@ import com.wjw.spring.proxy.Caculator;
  * 代理模式：
  * 属于结构模式，它的作用是通过代理对象，访问目标对象。代理对象里执行一些非核心代码，而不影响目标对象中的核心代码。
  */
+@Component
 public class CaculatorImpl implements Caculator {
 
     @Override
     public int add(int x, int y) {
 //        System.out.println("[日志]，方法：add，参数: "+ x + "," + y);
         int result = x + y;
-//        System.out.println("方法内部，result: "+result);
+        System.out.println("方法内部，result: "+result);
 //        System.out.println("[日志]，方法：add，结果: "+ result);
 
         return result;
@@ -33,7 +34,7 @@ public class CaculatorImpl implements Caculator {
     public int sub(int x, int y) {
 //        System.out.println("[日志]，方法：sub，参数: "+ x + "," + y);
         int result = x - y;
-//        System.out.println("方法内部，result: "+result);
+        System.out.println("方法内部，result: "+result);
 //        System.out.println("[日志]，方法：sub，结果: "+ result);
 
         return result;
@@ -43,7 +44,7 @@ public class CaculatorImpl implements Caculator {
     public int mul(int x, int y) {
 //        System.out.println("[日志]，方法：mul，result: "+ x + "," + y);
         int result = x * y;
-//        System.out.println("方法内部，result: "+result);
+        System.out.println("方法内部，result: "+result);
 //        System.out.println("[日志]，方法：mul，结果: "+ result);
 
         return result;
@@ -53,7 +54,7 @@ public class CaculatorImpl implements Caculator {
     public int div(int x, int y) {
 //        System.out.println("日期，方法：div，result: "+ x + "," + y);
         int result = x / y;
-//        System.out.println("方法内部，result: "+result);
+        System.out.println("方法内部，result: "+result);
 //        System.out.println("[日志]，方法：div，结果: "+ result);
 
         return result;

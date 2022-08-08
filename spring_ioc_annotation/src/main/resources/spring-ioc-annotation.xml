@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+<!--
+    注解，IOC容器会扫描程序员在那些实现类上面打了注解，自动装配成bean
+-->
+<!--    组件扫描
+<context:exclude-filter 排除注解扫描
+<context:include-filter 包含注解扫描, 需要在context:component-scan 设置use-default-filters="false"，
+默认值是true,此时可以使用排除扫描，值为false时，可以使用包含注解标签
+-->
+    <context:component-scan base-package="com.wjw.spring.*">
+<!--        排除扫描控制层 ,根据注解类型排除-->
+<!--        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>-->
+<!--        根据类名排除-->
+<!--        <context:exclude-filter type="assignable" expression="com.wjw.spring.controller.UserController"/>-->
+<!--        同理：-->
+<!--        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>-->
+    </context:component-scan>
 </beans>
