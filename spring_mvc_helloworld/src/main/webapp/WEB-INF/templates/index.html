@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<!-- thymeleaf的视图解析器 引入明明空间 -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+</head>
+<body>
+    <h1>hello spring mvc!!</h1>
+<!--    使用themyleaf 来渲染 逻辑路径下的 hello-->
+    <a th:href="@{/hello}">测试springMVC</a>
+    <a href="/hello">测试href</a>
+</body>
+</html>
