@@ -21,7 +21,7 @@
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 
-<!--    解决请求参数乱码的问题 -->
+<!--    解决请求参数乱码的问题，处理编码的过滤器一定要在其他过滤器之前，例如要在请求参数之前 -->
     <filter>
         <filter-name>CharacterEncodingFilter</filter-name>
         <filter-class>org.springframework.web.filter.CharacterEncodingFilter
