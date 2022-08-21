@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+</head>
+<body>
+    <h1>首页</h1>
+    <a th:href="@{/user}">查询所有的用户信息</a><br>
+    <a th:href="@{/user/1}">查询id为1的用户信息</a><br>
+    <form th:action="@{/user}" method="post">
+        <input type="submit" value="添加用户信息">
+    </form>
+    <form th:action="@{/user}" method="get">
+        <input type="submit" value="添加用户信息get">
+    </form>
+    <p>会触发getAlluser,强行给form表单用一个get请求提交</p>
+    <br>
+    <p>给form表单用一个post请求提交,实际上是 put请求， name="_method", value="put"</p>
+    <form th:action="@{/user}" method="post">
+        <input type="hidden" name="_method" value="put">
+        <input type="submit" value="添加用户信息get">
+    </form>
+    <br>
+    <p>给form表单用一个post请求提交,实际上是 delete请求， name="_method", value="delete"</p>
+    <form th:action="@{/user/1}" method="post">
+        <input type="hidden" name="_method" value="delete">
+        <input type="submit" value="删除用户id为1的信息">
+    </form>
+</body>
+</html>
